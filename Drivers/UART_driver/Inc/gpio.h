@@ -22,7 +22,7 @@ typedef struct {
 
 #define GPIO_Mode_INPUT 		0x00000000
 #define GPIO_Mode_OUTPUT 		0x00000001
-#define GPIO_Mode_ALTERNATE 	0x00000002
+#define GPIO_Mode_AF_PP 		0x00000002
 #define GPIO_Mode_ANALOG 		0x00000003
 
 #define OUTPUT_PUSH_PULL 		0x00000000
