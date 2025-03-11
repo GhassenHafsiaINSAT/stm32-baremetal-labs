@@ -10,16 +10,15 @@
 #define INC_STM32NUCLEOF401RE_MEMMAP_H_
 
 #include <stdint.h>
-#define   RCC_AHB1ENR     (uint32_t*)0x40023830
 
 #define GPIOA_BASE_ADDRESS  0x40020000
 #define GPIOB_BASE_ADDRESS 	0x40020400
 #define GPIOC_BASE_ADDRESS 	0x40020800
 #define GPIOD_BASE_ADDRESS 	0x40020C00
 
-#define usart1_base_addr 0x40011000
-#define usart2_base_addr 0x40004400
-#define usart6_base_addr 0x40011400
+#define USART1_BASE_ADDRESS 0x40011000
+#define USART2_BASE_ADDRESS 0x40004400
+#define USART6_BASE_ADDRESS 0x40011400
 
 typedef struct{
 	uint32_t MODER;
@@ -29,6 +28,9 @@ typedef struct{
 	uint32_t IDR;
 	uint32_t ODR;
 	uint32_t BSRR;
+	uint32_t LCKR;
+	uint32_t AFRL;
+	uint32_t AFRH;
 } GPIO_Typedef;
 
 typedef struct {
@@ -39,16 +41,16 @@ typedef struct {
 	uint32_t USART_CR2; // stop bit, clock settings
 	uint32_t USART_CR3; // DMA, error detection
 	uint32_t USART_GTPR;
-} usart_registers;
+} USART_TypeDef;
 
 #define GPIOA ((GPIO_Typedef*) GPIOA_BASE_ADDRESS)
 #define GPIOB ((GPIO_Typedef*) GPIOB_BASE_ADDRESS)
 #define GPIOC ((GPIO_Typedef*) GPIOC_BASE_ADDRESS)
 #define GPIOD ((GPIO_Typedef*) GPIOD_BASE_ADDRESS)
 
-#define usart1 ((usart_registers*) usart1_base_addr)
-#define usart2 ((usart_registers*) usart2_base_addr)
-#define usart6 ((usart_registers*) usart6_base_addr)
+#define USART1 ((USART_TypeDef*) USART1_BASE_ADDRESS)
+#define USART2 ((USART_TypeDef*) USART2_BASE_ADDRESS)
+#define USART6 ((USART_TypeDef*) USART6_BASE_ADDRESS)
 
 #endif /* INC_STM32NUCLEOF401RE_MEMMAP_H_ */
 

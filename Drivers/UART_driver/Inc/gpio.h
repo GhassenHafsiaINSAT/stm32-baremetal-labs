@@ -8,8 +8,9 @@
 #ifndef INC_GPIO_H_
 #define INC_GPIO_H_
 
-#include <stdint.h>
 #include "stm32_Nucleo_F401RE_map.h"
+#include "uart.h"
+#include "gpio.h"
 
 typedef struct {
 	uint32_t GPIO_PIN;
@@ -55,11 +56,8 @@ typedef struct {
 #define GPIO_PIN_14	((uint16_t)0x4000)
 #define GPIO_PIN_15	((uint16_t)0x8000)
 
-int GPIO_ReadPin(GPIO_Typedef* GPIOx, uint16_t GPIO_PIN);
-void GPIO_SetPin(GPIO_Typedef* GPIOx, uint16_t GPIO_PIN);
-void GPIO_ResetPin(GPIO_Typedef* GPIOx, uint16_t GPIO_PIN);
-void GPIO_TogglePin(GPIO_Typedef* GPIOx, uint16_t GPIO_PIN);
-void GPIO_Init(GPIO_Typedef* GPIOx, GPIO_Struct* gpio);
+void GPIO_Init(GPIO_Typedef* GPIOx, USART_config* usart);
+void GPIO_SetAF(GPIO_TypeDef *GPIOx, uint8_t pin, uint8_t AF);
 
 #endif /* INC_GPIO_H_ */
 
