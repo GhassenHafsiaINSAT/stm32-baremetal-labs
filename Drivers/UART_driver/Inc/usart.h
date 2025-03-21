@@ -2,7 +2,7 @@
  * uart.h
  *
  *  Created on: Feb 25, 2025
- *      Author: ghass
+ *      Author: ghassen
  */
 
 #ifndef USART_H_
@@ -15,9 +15,6 @@
 #define USART1_CLK_EN 0x00000044
 #define USART2_CLK_EN 0x00002040
 #define USART6_CLK_EN 0x00000064
-
-// USART enable (UE)
-#define UART_ENABLE 			0X00002000
 
 // Word length (M)
 #define UART_WORDLENGTH_8B 		0
@@ -44,14 +41,14 @@
 #define UART_STOPBITS_1_5		3
 
 // Parity bit
-#define UART_PARITY_ODD			1
 #define UART_PARITY_EVEN		0
-#define UART_PARITY_DISABLE		0
+#define UART_PARITY_ODD			1
+#define UART_PARITY_DISABLE		2
 
 // MODE
-#define UART_MODE_RX			0x00000004
-#define UART_MODE_TX			0x00000008
-#define UART_MODE_TX_RX			0x0000000C
+#define UART_MODE_RX			0
+#define UART_MODE_TX			1
+#define UART_MODE_TX_RX			2
 
 // HwFlowCtl
 #define UART_HWCONTROL_NONE		0
@@ -59,6 +56,10 @@
 #define UART_HWCONTROL_CTS		2
 #define UART_HWCONTROL_CTS_RTS	3
 
+
+#define USART_SR_TXE 	0
+#define USART_SR_TC 	1
+#define USART_SR_RXNE 	2
 
 typedef struct
 {
@@ -84,15 +85,6 @@ typedef enum {
 	HAL_TIMEOUT = 0x0003U
 } HAL_StatusTypeDef;
 
-typedef struct{
-	USART_TypeDef* uart_instance;
-	uint32_t usart_clk_enable;
-	GPIO_Typedef* gpio_instance;
-	uint16_t TX_pin;
-	uint8_t TX_AF;
-	uint32_t RX_pin;
-	uint8_t RX_AF;
-} USART_config;
 
 void USART_Init(USART_Handle_t *pUSARTHandle);
 
