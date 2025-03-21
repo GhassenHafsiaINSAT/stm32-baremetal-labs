@@ -17,9 +17,7 @@
  */
 
 #include <stdint.h>
-#include <uart.h>
-#include "rcc.h"
-
+#include "usart.h"
 
 int main(void)
 {
