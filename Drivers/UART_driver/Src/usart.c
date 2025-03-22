@@ -218,5 +218,39 @@ void USART_ReceiveData(USART_Handle_t *pUSARTHandle, uint8_t *pRxBuffer, uint32_
 	}
 }
 
+HAL_StatusTypeDef USART_SendDataIT(USART_Handle_t *pUSARTHandle,uint8_t *pTxBuffer, uint32_t Len)
+{
+	uint8_t txstate = pUSARTHandle->TxBusyState;
 
+	if(txstate != HAL_BUSY)
+	{
+		pUSARTHandle->TxLength = Len;
+		pUSARTHandle->pTxBuffer = pTxBuffer;
+		pUSARTHandle->TxBusyState = HAL_BUSY;
+
+		// enable interrupt for TXE
+		pUSARTHandle->pUSARTx->USART_CR1 |= (1 << 7);
+
+		// enable interrupt for TC
+		pUSARTHandle->pUSARTx->USART_CR1 |= (1 << 6);
+	}
+	return txstate;
+}
+
+uint8_t USART_ReceiveDataIT(USART_Handle_t *pUSARTHandle,uint8_t *pRxBuffer, uint32_t Len)
+{
+	uint8_t rxstate = pUSARTHandle->RxBusyState;
+
+	if(rxstate != HAL_BUSY)
+	{
+		pUSARTHandle->RxLength = Len;
+		pUSARTHandle->pRxBuffer = pRxBuffer;
+		pUSARTHandle->RxBusyState = HAL_BUSY;
+
+		//Implement the code to enable interrupt for RXNE
+		pUSARTHandle->pUSARTx->USART_CR1 |= (1 << 5);
+	}
+
+	return rxstate;
+}
 

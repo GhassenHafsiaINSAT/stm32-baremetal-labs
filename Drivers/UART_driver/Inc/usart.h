@@ -73,13 +73,21 @@ typedef struct
 
 typedef struct
 {
-	USART_TypeDef* pUSARTx;
-	USART_config_t usart_config;
-
+	USART_TypeDef* 		pUSARTx;
+	USART_config_t 		usart_config;
+	uint8_t             *pTxBuffer;
+	uint8_t             *pRxBuffer;
+	uint32_t            TxLength;
+	uint32_t            RxLength;
+	uint32_t            TxCount;
+	uint32_t            RxCount;
+	uint8_t             TxBusyState;
+	uint8_t             RxBusyState;
+	uint32_t            Timeout;
 } USART_Handle_t;
 
 typedef enum {
-	HAL_ok  	= 0x0000U,
+	HAL_OK  	= 0x0000U,
 	HAL_ERROR 	= 0x0001U,
 	HAL_BUSY	= 0x0002U,
 	HAL_TIMEOUT = 0x0003U
