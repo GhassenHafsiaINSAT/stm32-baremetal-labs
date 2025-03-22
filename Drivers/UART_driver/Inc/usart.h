@@ -10,12 +10,6 @@
 
 #include "stm32_Nucleo_F401RE_map.h"
 
-
-// USART Clock enable
-#define USART1_CLK_EN 0x00000044
-#define USART2_CLK_EN 0x00002040
-#define USART6_CLK_EN 0x00000064
-
 // Word length (M)
 #define UART_WORDLENGTH_8B 		0
 #define UART_WORDLENGTH_9B 		1
@@ -100,6 +94,8 @@ void USART_SendData(USART_Handle_t *pUSARTHandle, uint8_t *pTxBuffer, uint32_t l
 uint8_t USART_SendDataIT(USART_Handle_t *pUSARTHandle,uint8_t *pTxBuffer, uint32_t Len);
 uint8_t USART_ReceiveDataIT(USART_Handle_t *pUSARTHandle, uint8_t *pRxBuffer, uint32_t Len);
 uint8_t USART_GetFlagStatus(USART_TypeDef *pUSARTx , uint32_t FlagName);
+void USART_IRQHandling(USART_Handle_t *pHandle);
+
 
 /*
 void USART_PeriClockControl(USART_RegDef_t *pUSARTx, uint8_t EnorDi);
@@ -107,7 +103,6 @@ void USART_PeriClockControl(USART_RegDef_t *pUSARTx, uint8_t EnorDi);
 
 void USART_IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnorDi);
 void USART_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority);
-void USART_IRQHandling(USART_Handle_t *pHandle);
 
 
 void USART_PeripheralControl(USART_RegDef_t *pUSARTx, uint8_t EnOrDi);

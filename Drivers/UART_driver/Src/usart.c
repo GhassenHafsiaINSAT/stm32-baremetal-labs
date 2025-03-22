@@ -254,3 +254,66 @@ uint8_t USART_ReceiveDataIT(USART_Handle_t *pUSARTHandle,uint8_t *pRxBuffer, uin
 	return rxstate;
 }
 
+
+void USART_SetBaudRate(USART_TypeDef *pUSARTx, uint32_t BaudRate)
+{
+
+	uint32_t PCLKx;
+	uint32_t usartdiv;
+
+	//Mantissa and Fraction values
+	uint32_t M_part,F_part;
+
+	uint32_t tempreg=0;
+
+	//Get the value of APB bus clock in to the variable PCLKx
+	if(pUSARTx == USART1 || pUSARTx == USART6)
+	{
+		//USART1 and USART6 are hanging on APB2 bus
+		PCLKx = RCC_GetPCLK2Value();
+	}else
+	{
+		PCLKx = RCC_GetPCLK1Value();
+	}
+
+	//Check for OVER8 configuration bit
+	if(pUSARTx->USART_CR1 & (1 << 15)){
+		//OVER8 = 1 , over sampling by 8
+		usartdiv = ((25 * PCLKx) / (2 *BaudRate));
+	}
+
+	else{
+		//over sampling by 16
+		usartdiv = ((25 * PCLKx) / (4 * BaudRate));
+	}
+
+	//Calculate the Mantissa part
+	M_part = usartdiv/100;
+
+	tempreg |= M_part << 4;
+
+	F_part = (usartdiv - (M_part * 100));
+
+	if(pUSARTx->USART_CR1 & ( 1 << 15))
+	{
+		//OVER8 = 1 , over sampling by 8
+		F_part = ((( F_part * 100)+ 50) / 100)& ((uint8_t)0x07);
+
+	}else
+	{
+		//over sampling by 16
+		F_part = ((( F_part * 100)+ 50) / 100) & ((uint8_t)0x0F);
+
+	}
+
+	tempreg |= F_part;
+	pUSARTx->USART_BRR = tempreg;
+}
+
+void RCC_GetPCLK2Value(void){
+
+}
+
+void RCC_GetPCLK1Value(void){
+
+}
