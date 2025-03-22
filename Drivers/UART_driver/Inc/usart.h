@@ -87,25 +87,14 @@ typedef enum {
 
 
 void USART_Init(USART_Handle_t *pUSARTHandle);
-
-/*
-//
-//USART_config USART_table[] = {
-//		{USART1, USART1_CLK_EN, GPIOA, GPIO_PIN_9, 7, GPIO_PIN_10, 7},
-//		{USART2, USART2_CLK_EN, GPIOA, GPIO_PIN_2, 7, GPIO_PIN_3, 7},
-//		{USART6, USART6_CLK_EN, GPIOC, GPIO_PIN_6, 8, GPIO_PIN_7, 8},
-//};
-void USART_PeriClockControl(USART_RegDef_t *pUSARTx, uint8_t EnorDi);
-
-
-void USART_DeInit(USART_RegDef_t *pUSARTx);
-
-
-
-void USART_SendData(USART_RegDef_t *pUSARTx,uint8_t *pTxBuffer, uint32_t Len);
-void USART_ReceiveData(USART_RegDef_t *pUSARTx, uint8_t *pRxBuffer, uint32_t Len);
+void USART_ReceiveData(USART_Handle_t *pUSARTHandle, uint8_t *pRxBuffer, uint32_t len);
+void USART_SendData(USART_Handle_t *pUSARTHandle, uint8_t *pTxBuffer, uint32_t len);
 uint8_t USART_SendDataIT(USART_Handle_t *pUSARTHandle,uint8_t *pTxBuffer, uint32_t Len);
 uint8_t USART_ReceiveDataIT(USART_Handle_t *pUSARTHandle, uint8_t *pRxBuffer, uint32_t Len);
+uint8_t USART_GetFlagStatus(USART_TypeDef *pUSARTx , uint32_t FlagName);
+
+/*
+void USART_PeriClockControl(USART_RegDef_t *pUSARTx, uint8_t EnorDi);
 
 
 void USART_IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnorDi);
@@ -114,7 +103,6 @@ void USART_IRQHandling(USART_Handle_t *pHandle);
 
 
 void USART_PeripheralControl(USART_RegDef_t *pUSARTx, uint8_t EnOrDi);
-uint8_t USART_GetFlagStatus(USART_RegDef_t *pUSARTx , uint32_t FlagName);
 void USART_ClearFlag(USART_RegDef_t *pUSARTx, uint16_t StatusFlagName);
 
 

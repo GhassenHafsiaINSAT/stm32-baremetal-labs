@@ -106,165 +106,117 @@ void USART_Init(USART_Handle_t *pUSARTHandle)
 uint8_t USART_GetFlagStatus(USART_TypeDef *pUSARTx , uint32_t FlagName){
 
 	if (FlagName == USART_SR_TXE){
-		return (uint8_t (pUSARTx->USART_SR & (1 << 7)));
+		return ((uint8_t)(pUSARTx->USART_SR & (1 << 7)));
 	}
 	else if (FlagName == USART_SR_TC){
-		return (uint8_t (pUSARTx->USART_SR & (1 << 6)));
+		return ((uint8_t)(pUSARTx->USART_SR & (1 << 6)));
 	}
 	else if (FlagName == USART_SR_RXNE){
-		return (uint8_t (pUSARTx->USART_SR & (1 <<5)));
+		return ((uint8_t)(pUSARTx->USART_SR & (1 <<5)));
 	}
+	return 0;
 }
 
-void USART_SendData(USART_Handle_t *pUSARTHandle, uint8_t *pTxBuffer, uint32_t Len)
-{
+void USART_SendData(USART_Handle_t *pUSARTHandle, uint8_t *pTxBuffer, uint32_t len){
 
 	uint16_t *pdata;
-   //Loop over until "Len" number of bytes are transferred
-	for(uint32_t i = 0 ; i < TODO; i++)
+	for(uint32_t i = 0 ; i < len; i++)
 	{
-		//Implement the code to wait until TXE flag is set in the SR
-		while(! USART_GetFlagStatus(pUSARTHandle->pUSARTx,USART_FLAG_TODO));
+		// wait for TXE to be set
+		while(! USART_GetFlagStatus(pUSARTHandle->pUSARTx,USART_SR_TXE));
 
-         //Check the USART_WordLength item for 9BIT or 8BIT in a frame
-		if(pUSARTHandle->USART_Config.TODO == USART_WORDLEN_9BITS)
+		// 9bit data transfer
+		if(pUSARTHandle->usart_config.USART_WordLength == UART_WORDLENGTH_9B)
 		{
-			//if 9BIT, load the DR with 2bytes masking the bits other than first 9 bits
+
 			pdata = (uint16_t*) pTxBuffer;
-			TODO = (*pdata & (uint16_t)0x01FF);
+			pUSARTHandle->pUSARTx->USART_DR = (*pdata & (uint16_t)0x01FF);
 
 			//check for USART_ParityControl
-			if(pUSARTHandle->USART_Config.USART_ParityControl == USART_PARITY_DISABLE)
+			if(pUSARTHandle->usart_config.USART_ParityControl == UART_PARITY_DISABLE)
 			{
-				//No parity is used in this transfer. so, 9bits of user data will be sent
-				//Implement the code to increment pTxBuffer twice
+				// No parity is used in this transfer.
+				// each data will be written on 2 bits
 				pTxBuffer++;
 				pTxBuffer++;
 			}
 			else
 			{
-				//Parity bit is used in this transfer . so , 8bits of user data will be sent
-				//The 9th bit will be replaced by parity bit by the hardware
+				// Parity bit is used in this transfer the 9th bit will be replaced by parity bit.
+				// each data will be written on 1 bit
 				pTxBuffer++;
 			}
 		}
 		else
 		{
-			//This is 8bit data transfer
-			pUSARTHandle->pUSARTx->DR = (*pTxBuffer  & (uint8_t)0xFF);
-
-			//Implement the code to increment the buffer address
-			TODO
+			if (pUSARTHandle->usart_config.USART_ParityControl == UART_PARITY_DISABLE){
+				// 8bit data transfer
+				pUSARTHandle->pUSARTx->USART_DR = (*pTxBuffer  & (uint8_t)0xFF);
+				pTxBuffer++;
+			}
+			else{
+				// 7bit data transfer
+				pUSARTHandle->pUSARTx->USART_DR = (*pTxBuffer & (uint8_t)0x7F);
+				pTxBuffer++;
+			}
 		}
 	}
 
-	//Implement the code to wait till TC flag is set in the SR
-	while( ! USART_GetFlagStatus(pUSARTHandle->pUSARTx,USART_FLAG_TODO));
+	// wait for TC to be set
+	while( ! USART_GetFlagStatus(pUSARTHandle->pUSARTx,USART_SR_TC));
 }
 
-void USART_ReceiveData(USART_Handle_t *pUSARTHandle, uint8_t *pRxBuffer, uint32_t Len)
-{
-   //Loop over until "Len" number of bytes are transferred
-	for(uint32_t i = 0 ; i < TODO; i++)
+void USART_ReceiveData(USART_Handle_t *pUSARTHandle, uint8_t *pRxBuffer, uint32_t len){
+
+	//Loop over until "len" number of bytes are transferred
+	for(uint32_t i = 0 ; i < len; i++)
 	{
 		//Implement the code to wait until RXNE flag is set in the SR
-		TODO
+		while( ! USART_GetFlagStatus(pUSARTHandle->pUSARTx, USART_SR_RXNE));
 
 		//Check the USART_WordLength to decide whether we are going to receive 9bit of data in a frame or 8 bit
-		if(pUSARTHandle->USART_Config.USART_WordLength == USART_WORDLEN_9BITS)
+		if( pUSARTHandle->usart_config.USART_WordLength == UART_WORDLENGTH_9B)
 		{
 			//We are going to receive 9bit data in a frame
 
 			//check are we using USART_ParityControl control or not
-			if(pUSARTHandle->USART_Config.USART_ParityControl == TODO)
+			if(pUSARTHandle->usart_config.USART_ParityControl == UART_PARITY_DISABLE)
 			{
-				//No parity is used. so, all 9bits will be of user data
+				// No parity is used. so, 9bits will be received
+				*((uint16_t*) pRxBuffer) = (pUSARTHandle->pUSARTx->USART_DR  & (uint16_t)0x01FF);
 
-				//read only first 9 bits. so, mask the DR with 0x01FF
-				*((uint16_t*) pRxBuffer) = (pUSARTHandle->pUSARTx->DR  & (uint16_t)TODO);
-
-				//Now increment the pRxBuffer two times
-				TODO
+				pRxBuffer++;
+				pRxBuffer++;
 			}
 			else
 			{
-				//Parity is used, so, 8bits will be of user data and 1 bit is parity
-				 *pRxBuffer = (pUSARTHandle->pUSARTx->DR  & (uint8_t)0xFF);
-
-				 //Increment the pRxBuffer
-				TODO
+				// Parity is used, so, 8bits will be received
+				*pRxBuffer = (pUSARTHandle->pUSARTx->USART_DR  & (uint8_t)0xFF);
+				pRxBuffer++;
 			}
 		}
 		else
 		{
-			//We are going to receive 8bit data in a frame
+			// receiving 8bit data in a frame
 
 			//check are we using USART_ParityControl control or not
-			if(pUSARTHandle->USART_Config.USART_ParityControl == USART_PARITY_DISABLE)
+			if(pUSARTHandle->usart_config.USART_ParityControl == UART_PARITY_DISABLE)
 			{
 				//No parity is used , so all 8bits will be of user data
 
 				//read 8 bits from DR
-				 *pRxBuffer = TODO;
+				*pRxBuffer = (uint8_t)pUSARTHandle->pUSARTx->USART_DR & (uint8_t)0xFF;
 			}
 
 			else
 			{
-				//Parity is used, so , 7 bits will be of user data and 1 bit is parity
-
-				//read only 7 bits , hence mask the DR with 0X7F
-				 *pRxBuffer = (uint8_t) TODO
-
+				// Parity is used, 7 bits will be of user data and 1 bit is parity
+				*pRxBuffer = (uint8_t)pUSARTHandle->pUSARTx->USART_DR & (uint8_t) 0x7F;
 			}
-
-			//increment the pRxBuffer
 			pRxBuffer++;
 		}
 	}
-
 }
 
-uint8_t USART_SendDataIT(USART_Handle_t *pUSARTHandle,uint8_t *pTxBuffer, uint32_t Len)
-{
-	uint8_t txstate = pUSARTHandle->TODO;
-
-	if(txstate != USART_BUSY_IN_TX)
-	{
-		pUSARTHandle->TODO = Len;
-		pUSARTHandle->pTxBuffer = TODO;
-		pUSARTHandle->TxBusyState = TODO;
-
-		//Implement the code to enable interrupt for TXE
-		TODO
-
-
-		//Implement the code to enable interrupt for TC
-		TODO
-
-
-	}
-
-	return txstate;
-
-}
-
-uint8_t USART_ReceiveDataIT(USART_Handle_t *pUSARTHandle,uint8_t *pRxBuffer, uint32_t Len)
-{
-	uint8_t rxstate = pUSARTHandle->TODO;
-
-	if(rxstate != TODO)
-	{
-		pUSARTHandle->RxLen = Len;
-		pUSARTHandle->pRxBuffer = TODO;
-		pUSARTHandle->RxBusyState = TODO;
-
-		//Implement the code to enable interrupt for RXNE
-		TODO
-
-	}
-
-	return rxstate;
-
-}
 
 
