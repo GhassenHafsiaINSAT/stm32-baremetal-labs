@@ -8,7 +8,7 @@
 #ifndef USART_H_
 #define USART_H_
 
-#include "stm32_Nucleo_F401RE_map.h"
+#include "NUCLEOf401_mem_map.h"
 
 // Word length (M)
 #define UART_WORDLENGTH_8B 		0

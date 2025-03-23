@@ -6,7 +6,6 @@
  */
 #include "usart.h"
 #include "rcc.h"
-#include "stm32_Nucleo_F401RE_map.h"
 
 void USART_Init(USART_Handle_t *pUSARTHandle)
 {
