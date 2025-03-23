@@ -9,9 +9,18 @@
 #define NUCLEOF401_MEM_MAP_H_
 
 #include <stdint.h>
+#define __vo volatile
+
+#define ENABLE 			1
+#define DISABLE 		0
+#define SET 			ENABLE
+#define RESET 			DISABLE
+#define GPIO_PIN_SET 	SET
+#define GPIO_PIN_RESET 	RESET
 
 ////////////////////////////// RCC //////////////////////////////
-#define RCC_BASE_ADDRESS  0x40023800
+
+#define RCC_BASE_ADDRES 0x40023800
 
 typedef struct{
 	uint32_t RCC_CR;
@@ -35,12 +44,11 @@ typedef struct{
 	uint32_t RCC_SSCGR;
 	uint32_t RCC_PLLI2SCFGR;
 	uint32_t RCC_DCKCFGR;
-} RCC_Typedef;
+} RCC_Typedef_t;
 
-#define RCC ((RCC_Typedef*) RCC_BASE_ADDRESS)
+#define RCC ((RCC_Typedef_t*) RCC_BASE_ADDRES)
 
 ////////////////////////////// GPIO //////////////////////////////
-#define   RCC_AHB1ENR     (uint32_t*)0x40023830
 
 #define GPIOA_BASE_ADDRESS  0x40020000
 #define GPIOB_BASE_ADDRESS 	0x40020400
@@ -48,19 +56,21 @@ typedef struct{
 #define GPIOD_BASE_ADDRESS 	0x40020C00
 
 typedef struct{
-	uint32_t MODER;
-	uint32_t OTYPER;
-	uint32_t OSPEEDR;
-	uint32_t PUPDR;
-	uint32_t IDR;
-	uint32_t ODR;
-	uint32_t BSRR;
-} GPIO_Typedef;
+	__vo uint32_t GPIO_MODER;
+	__vo uint32_t GPIO_OTYPER;
+	__vo uint32_t GPIO_OSPEEDR;
+	__vo uint32_t GPIO_PUPDR;
+	__vo uint32_t GPIO_IDR;
+	__vo uint32_t GPIO_ODR;
+	__vo uint32_t GPIO_BSRR;
+	__vo uint32_t GPIO_LCKR;
+	__vo uint32_t GPIO_AF[2];
+} GPIO_Typdef_t;
 
-#define GPIOA ((GPIO_Typedef*) GPIOA_BASE_ADDRESS)
-#define GPIOB ((GPIO_Typedef*) GPIOB_BASE_ADDRESS)
-#define GPIOC ((GPIO_Typedef*) GPIOC_BASE_ADDRESS)
-#define GPIOD ((GPIO_Typedef*) GPIOD_BASE_ADDRESS)
+#define GPIOA ((GPIO_Typdef_t*) GPIOA_BASE_ADDRESS)
+#define GPIOB ((GPIO_Typdef_t*) GPIOB_BASE_ADDRESS)
+#define GPIOC ((GPIO_Typdef_t*) GPIOC_BASE_ADDRESS)
+#define GPIOD ((GPIO_Typdef_t*) GPIOD_BASE_ADDRESS)
 
 ////////////////////////////// USART //////////////////////////////
 

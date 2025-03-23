@@ -1,37 +1,34 @@
-#include <gpio.h>
-#include <stdint.h>
+#include "gpio.h"
+#include "NUCLEOf401_mem_map.h"
 
 
 uint8_t EtatBouton;
-
 uint32_t x;
-
 int i;
-
-GPIO_Struct GPIO_InitStruct ;
+GPIO_Handle_t GPIO_InitStruct ;
 
 int main ()
 {
 	//Activate GPIOs Clocks
-
-	*RCC_AHB1ENR  |=  0x00000005; //Activation de l'horloge du PORT A/D
-
+	GPIO_CLK_Ctrl(GPIOA, ENABLE);
+	GPIO_CLK_Ctrl(GPIOC, ENABLE);
 	//Configure GPIO Pins (Led: PA5) ! MODE INPUT ; SPEED LOW; OUTOUT PUSH PULL; NO PULL
 
-	//Configuration du Bouton Poussoir
-	GPIO_InitStruct.GPIO_PIN = GPIO_PIN_13  ;
-	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_INPUT ;
-	GPIO_InitStruct.GPIO_PullPush = GPIO_PullPush_NoPull;
+	// push button configuration
+	GPIO_InitStruct.GPIOx = GPIOC;
+	GPIO_InitStruct.gpio_config.GPIO_PIN = GPIO_PIN_13  ;
+	GPIO_InitStruct.gpio_config.GPIO_Mode = GPIO_MODE_INPUT ;
+	GPIO_InitStruct.gpio_config.GPIO_PullPush = GPIO_PullPush_NoPull;
 
-	GPIO_Init (GPIOC, &GPIO_InitStruct) ;
+	GPIO_Init (GPIO_InitStruct.GPIOx, &(GPIO_InitStruct.gpio_config));
 
-	//Configurartion de(s) Led(s)
-	GPIO_InitStruct.GPIO_PIN = GPIO_PIN_5;
+	// Led configuration
+	GPIO_InitStruct.GPIOx = GPIOA;
+	GPIO_InitStruct.gpio_config.GPIO_PIN = GPIO_PIN_5;
+	GPIO_InitStruct.gpio_config.GPIO_Mode = GPIO_MODE_OUTPUT;
+	GPIO_InitStruct.gpio_config.GPIO_PullPush = GPIO_PullPush_NoPull;
 
-	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUTPUT;
-	GPIO_InitStruct.GPIO_PullPush = GPIO_PullPush_NoPull;
-
-	GPIO_Init (GPIOA, &GPIO_InitStruct) ;
+	GPIO_Init(GPIO_InitStruct.GPIOx, &(GPIO_InitStruct.gpio_config));
 
 
 	while (1)
