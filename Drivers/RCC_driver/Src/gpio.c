@@ -67,23 +67,44 @@ void GPIO_Init(GPIO_Typdef_t* GPIOx, GPIO_PinConfig_t* gpio){
 		pin = 0x01u << position;
 		target_pin = (gpio->GPIO_PIN) & pin;
 		if (target_pin == pin){
-			GPIOx->GPIO_MODER &= ~(0x3u << 2*position);
-			GPIOx->GPIO_MODER |= (gpio->GPIO_Mode) << 2*position;
+			if (((gpio->GPIO_Mode != GPIO_MODE_IT_RAISING) |
+					(gpio->GPIO_Mode != GPIO_MODE_IT_FALLING)) |
+					((gpio->GPIO_Mode != GPIO_MODE_IT_RAISING_FALLING))){
+				GPIOx->GPIO_MODER &= ~(0x3u << 2*position);
+				GPIOx->GPIO_MODER |= (gpio->GPIO_Mode) << 2*position;
 
-			GPIOx->GPIO_OTYPER &= ~(0x3u << 2*position);
-			GPIOx->GPIO_OTYPER |= (gpio->GPIO_Otyper) << 2*position;
+				GPIOx->GPIO_OTYPER &= ~(0x3u << 2*position);
+				GPIOx->GPIO_OTYPER |= (gpio->GPIO_Otyper) << 2*position;
 
-			GPIOx->GPIO_OSPEEDR &= ~(0x3u << 2*position);
-			GPIOx->GPIO_OSPEEDR |= (gpio->GPIO_Ospeeder) << 2*position;
+				GPIOx->GPIO_OSPEEDR &= ~(0x3u << 2*position);
+				GPIOx->GPIO_OSPEEDR |= (gpio->GPIO_Ospeeder) << 2*position;
 
-			GPIOx->GPIO_PUPDR &= ~(0x3u << 2*position);
-			GPIOx->GPIO_PUPDR |= (gpio->GPIO_PullPush) << 2*position;
+				GPIOx->GPIO_PUPDR &= ~(0x3u << 2*position);
+				GPIOx->GPIO_PUPDR |= (gpio->GPIO_PullPush) << 2*position;
 
-			if (gpio->GPIO_Mode == GPIO_MODE_ALTERNATE){
-				uint32_t AF_reg = gpio->GPIO_PIN / 8;
-				uint32_t AFx = gpio->GPIO_PIN % 8;
-				GPIOx->GPIO_AF[AF_reg] |= (gpio->GPIO_AF << AFx * 4);
+				if (gpio->GPIO_Mode == GPIO_MODE_ALTERNATE){
+					uint32_t AF_reg = gpio->GPIO_PIN / 8;
+					uint32_t AFx = gpio->GPIO_PIN % 8;
+					GPIOx->GPIO_AF[AF_reg] |= (gpio->GPIO_AF << AFx * 4);
+				}
 			}
+			else {
+				if (gpio->GPIO_Mode == GPIO_MODE_IT_RAISING){
+					EXTI->EXTI_FTSR |= ( 1 << gpio->GPIO_PIN );
+					EXTI->EXTI_RTSR &= ~( 1 << gpio->GPIO_PIN );
+				}
+				else if (gpio->GPIO_Mode == GPIO_MODE_IT_FALLING){
+					EXTI->EXTI_RTSR |= ( 1 << gpio->GPIO_PIN );
+					EXTI->EXTI_FTSR &= ~( 1 << gpio->GPIO_PIN );
+				}
+				else if (gpio->GPIO_Mode != GPIO_MODE_IT_RAISING_FALLING){
+					EXTI->EXTI_FTSR |= ( 1 << gpio->GPIO_PIN );
+					EXTI->EXTI_RTSR |= ( 1 << gpio->GPIO_PIN );
+				}
+				EXTI->EXTI_IMR |= ( 1 << gpio->GPIO_PIN );
+
+			}
+
 		}
 	}
 }
