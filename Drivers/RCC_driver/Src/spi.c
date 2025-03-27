@@ -38,5 +38,37 @@ void SPI_PeriClockControl(SPI_Typedef_t* SPIx, uint8_t EnOrDis){
 
 }
 void SPI_Init(SPI_Handle_t* Spi_handler){
+	// enable SPI clock
+	SPI_PeriClockControl(Spi_handler->SPIx, ENABLE);
 
+	uint32_t tempReg = 0;
+	// CR1 register's configuration
+	// SPI device mode
+	tempReg |= (Spi_handler->spi_config.SPI_DeviceMode << SPI_CR1_MSTR);
+
+	// Sending Mode
+	if (Spi_handler->spi_config.SPI_BusConfig == SPI_BUS_CONFIG_FULL_DUPLEX){
+		tempReg &= ~(1 << SPI_CR1_BIDIMODE);
+	}
+	else if (Spi_handler->spi_config.SPI_BusConfig == SPI_BUS_CONFIG_HALF_DUPLEX){
+		tempReg |= (1 << SPI_CR1_BIDIMODE);
+	}
+	else if (Spi_handler->spi_config.SPI_BusConfig == SPI_BUS_CONFIG_SIMPLEX_RXONLY){
+		tempReg &= ~(1 << SPI_CR1_BIDIMODE);
+		tempReg |= (1 << SPI_CR1_RXONLY);
+	}
+
+	// Clock Speed
+	tempReg |= (Spi_handler->spi_config.SPI_CLK_SPEED << SPI_CR1_BR);
+
+	// Data Format
+	tempReg |= (Spi_handler->spi_config.SPI_DFF << SPI_CR1_DFF);
+
+	// CPOL
+	tempReg |= (Spi_handler->spi_config.SPI_CPOL << SPI_CR1_CPOL);
+
+	// CPHA
+	tempReg |= (Spi_handler->spi_config.SPI_CPHA << SPI_CR1_CPHA);
+
+	Spi_handler->SPIx->SPI_CR1 = tempReg;
 }

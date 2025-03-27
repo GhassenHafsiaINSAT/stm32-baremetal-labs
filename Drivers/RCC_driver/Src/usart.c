@@ -7,21 +7,36 @@
 #include "usart.h"
 #include "rcc.h"
 
+
+void USART_PeriClockControl(USART_TypeDef_t* USARTx, uint8_t EnOrDis){
+	if (EnOrDis == ENABLE){
+		if (USARTx == USART1){
+			USART1_CLK_EN();
+		}
+		else if (USARTx == USART2){
+			USART2_CLK_EN();
+		}
+		else if (USARTx == USART6){
+			USART6_CLK_EN();
+		}
+	}
+	else if (EnOrDis == DISABLE){
+		if (USARTx == USART1){
+			USART1_CLK_DIS();
+		}
+		else if (USARTx == USART2){
+			USART2_CLK_DIS();
+		}
+		else if (USARTx == USART6){
+			USART6_CLK_DIS();
+		}
+	}
+}
+
 void USART_Init(USART_Handle_t *pUSARTHandle)
 {
 	// enabling clocks
-
-	if (pUSARTHandle->pUSARTx == USART1){
-		*RCC_APB2_ENR |= (1 << 4);
-	}
-	else if (pUSARTHandle->pUSARTx == USART2){
-		*RCC_APB1_ENR |= (1 << 17);
-
-	}
-	else if (pUSARTHandle->pUSARTx == USART6){
-		*RCC_APB2_ENR |= (1 << 5);
-
-	}
+	USART_PeriClockControl(pUSARTHandle->pUSARTx, ENABLE);
 
 	uint32_t tempreg=0;
 

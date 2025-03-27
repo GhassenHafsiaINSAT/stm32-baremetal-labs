@@ -67,7 +67,7 @@ typedef struct
 
 typedef struct
 {
-	USART_TypeDef* 		pUSARTx;
+	USART_TypeDef_t* 		pUSARTx;
 	USART_config_t 		usart_config;
 	uint8_t             *pTxBuffer;
 	uint8_t             *pRxBuffer;
@@ -89,6 +89,7 @@ typedef enum {
 
 
 void USART_Init(USART_Handle_t *pUSARTHandle);
+void USART_PeriClockControl(USART_TypeDef_t* USARTx, uint8_t EnOrDis);
 void USART_ReceiveData(USART_Handle_t *pUSARTHandle, uint8_t *pRxBuffer, uint32_t len);
 void USART_SendData(USART_Handle_t *pUSARTHandle, uint8_t *pTxBuffer, uint32_t len);
 uint8_t USART_SendDataIT(USART_Handle_t *pUSARTHandle,uint8_t *pTxBuffer, uint32_t Len);
