@@ -9,6 +9,7 @@
 #define NUCLEOF401_MEM_MAP_H_
 
 #include <stdint.h>
+
 #define __vo volatile
 
 #define ENABLE 			1
@@ -181,9 +182,9 @@ typedef struct {
 	__vo uint32_t USART_GTPR;
 } USART_TypeDef_t;
 
-#define USART1 ((USART_TypeDef*) USART1_BASE_ADDRESS)
-#define USART2 ((USART_TypeDef*) USART2_BASE_ADDRESS)
-#define USART6 ((USART_TypeDef*) USART6_BASE_ADDRESS)
+#define USART1 ((USART_TypeDef_t*) USART1_BASE_ADDRESS)
+#define USART2 ((USART_TypeDef_t*) USART2_BASE_ADDRESS)
+#define USART6 ((USART_TypeDef_t*) USART6_BASE_ADDRESS)
 
 #define USART1_CLK_EN() 	(RCC->RCC_AHB2ENR |= (1 << 4))
 #define USART2_CLK_EN() 	(RCC->RCC_AHB1ENR |= (1 << 17))

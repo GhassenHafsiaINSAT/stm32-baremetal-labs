@@ -29,7 +29,7 @@ typedef struct{
  * @SPI_DeviceMode
  */
 #define SPI_DEV_MODE_MASTER	1
-#define SPI_DEV_MODE_MASTER	0
+#define SPI_DEV_MODE_SLAVE	0
 
 /*
  * @SPI_BusConfig

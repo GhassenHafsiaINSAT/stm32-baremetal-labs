@@ -120,7 +120,7 @@ void USART_Init(USART_Handle_t *pUSARTHandle)
 
 }
 
-uint8_t USART_GetFlagStatus(USART_TypeDef *pUSARTx , uint32_t FlagName){
+uint8_t USART_GetFlagStatus(USART_TypeDef_t *pUSARTx , uint32_t FlagName){
 
 	if (FlagName == USART_SR_TXE){
 		return ((uint8_t)(pUSARTx->USART_SR & (1 << 7)));
@@ -272,7 +272,7 @@ uint8_t USART_ReceiveDataIT(USART_Handle_t *pUSARTHandle,uint8_t *pRxBuffer, uin
 }
 
 
-void USART_SetBaudRate(USART_TypeDef *pUSARTx, uint32_t BaudRate)
+void USART_SetBaudRate(USART_TypeDef_t *pUSARTx, uint32_t BaudRate)
 {
 
 	uint32_t PCLKx;

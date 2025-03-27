@@ -94,10 +94,10 @@ void USART_ReceiveData(USART_Handle_t *pUSARTHandle, uint8_t *pRxBuffer, uint32_
 void USART_SendData(USART_Handle_t *pUSARTHandle, uint8_t *pTxBuffer, uint32_t len);
 uint8_t USART_SendDataIT(USART_Handle_t *pUSARTHandle,uint8_t *pTxBuffer, uint32_t Len);
 uint8_t USART_ReceiveDataIT(USART_Handle_t *pUSARTHandle, uint8_t *pRxBuffer, uint32_t Len);
-uint8_t USART_GetFlagStatus(USART_TypeDef *pUSARTx , uint32_t FlagName);
+uint8_t USART_GetFlagStatus(USART_TypeDef_t *pUSARTx , uint32_t FlagName);
 void USART_IRQHandling(USART_Handle_t *pHandle);
 
-void USART_SetBaudRate(USART_TypeDef *pUSARTx, uint32_t BaudRate);
+void USART_SetBaudRate(USART_TypeDef_t *pUSARTx, uint32_t BaudRate);
 
 /*
 void USART_PeriClockControl(USART_RegDef_t *pUSARTx, uint8_t EnorDi);
