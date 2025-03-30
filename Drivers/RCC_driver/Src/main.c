@@ -7,6 +7,10 @@ uint32_t x;
 int i;
 GPIO_Handle_t GPIO_InitStruct ;
 
+void EXTI0_IRQHandler(void){
+	GPIO_IRQHandling(0);
+}
+
 int main ()
 {
 	//Activate GPIOs Clocks

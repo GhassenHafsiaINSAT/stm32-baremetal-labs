@@ -11,6 +11,18 @@
 #include <stdint.h>
 
 #define __vo volatile
+////////////////////////////// CPU //////////////////////////////
+#define NVIC_ISER0	((__vo uint32_t*)0xE000E100)
+#define NVIC_ISER1	((__vo uint32_t*)0xE000E104)
+#define NVIC_ISER2	((__vo uint32_t*)0xE000E108)
+#define NVIC_ISER3	((__vo uint32_t*)0xE000E10C)
+
+#define NVIC_ICER0	((__vo uint32_t*)0xE000E180)
+#define NVIC_ICER1	((__vo uint32_t*)0xE000E184)
+#define NVIC_ICER2	((__vo uint32_t*)0xE000E188)
+#define NVIC_ICER3	((__vo uint32_t*)0xE000E18C)
+
+#define NVIC_IPR 	((__vo uint32_t*)0xE000E400)
 
 #define ENABLE 			1
 #define DISABLE 		0
@@ -63,6 +75,23 @@ typedef struct{
 }EXTI_Typedef_t;
 
 #define EXTI ((EXTI_Typedef_t*) EXTI_BASE_ADDRESS)
+
+////////////////////////////// SYSCFG //////////////////////////////
+#define SYSCFG_BASE_ADDRESS 0x40013800
+
+typedef struct{
+	__vo uint32_t SYSCFG_MEMRMP;
+	__vo uint32_t SYSCFG_PMC;
+	__vo uint32_t SYSCFG_EXTICR[4];
+	uint32_t reserved[2];
+	__vo uint32_t SYSCFG_CMPCR;
+
+} SYSCFG_Typedef_t;
+
+#define SYSCFG ((SYSCFG_Typedef_t*) SYSCFG_BASE_ADDRESS)
+
+#define SYSCFG_CLK_EN 	(RCC->RCC_APB2ENR |= (1 << 14))
+#define SYSCFG_CLK_DIS	(RCC->RCC_APB2RSTR |= (1 << 14))
 ////////////////////////////// GPIO //////////////////////////////
 
 #define GPIOA_BASE_ADDRESS  0x40020000
@@ -87,6 +116,31 @@ typedef struct{
 #define GPIOC ((GPIO_Typdef_t*) GPIOC_BASE_ADDRESS)
 #define GPIOD ((GPIO_Typdef_t*) GPIOD_BASE_ADDRESS)
 
+// GPIO clock enable macros
+#define GPIOA_CLK_EN() 	(RCC->RCC_AHB1ENR |= (1 << 0))
+#define GPIOB_CLK_EN() 	(RCC->RCC_AHB1ENR |= (1 << 1))
+#define GPIOC_CLK_EN() 	(RCC->RCC_AHB1ENR |= (1 << 2))
+#define GPIOD_CLK_EN() 	(RCC->RCC_AHB1ENR |= (1 << 3))
+
+// GPIO clock disable macros
+#define GPIOA_CLK_DIS() 	(RCC->RCC_AHB1RSTR |= (1 << 0))
+#define GPIOB_CLK_DIS() 	(RCC->RCC_AHB1RSTR |= (1 << 1))
+#define GPIOC_CLK_DIS() 	(RCC->RCC_AHB1RSTR |= (1 << 2))
+#define GPIOD_CLK_DIS() 	(RCC->RCC_AHB1RSTR |= (1 << 3))
+
+// GPIO port code for EXTI
+#define GPIO_PORT_CODE(x) ( (x == GPIOA) ? 0 :\
+								(x == GPIOB) ? 1 :\
+									(x == GPIOC) ? 2 :\
+											(x == GPIOD) ? 3 : -1)
+
+#define IRQ_NUM_EXTI0 			6
+#define IRQ_NUM_EXTI1 			7
+#define IRQ_NUM_EXTI2 			8
+#define IRQ_NUM_EXTI3 			9
+#define IRQ_NUM_EXTI4 			10
+#define IRQ_NUM_EXTI9_5 		23
+#define IRQ_NUM_EXTI15_10		40
 ////////////////////////////// SPI //////////////////////////////
 
 #define  SPI1_BASE_ADDRESS 0x40013000

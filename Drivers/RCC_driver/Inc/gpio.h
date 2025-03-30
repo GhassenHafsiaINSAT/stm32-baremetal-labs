@@ -85,8 +85,13 @@ int GPIO_ReadPin(GPIO_Typdef_t* GPIOx, uint16_t GPIO_PIN);
 void GPIO_SetPin(GPIO_Typdef_t* GPIOx, uint16_t GPIO_PIN);
 void GPIO_ResetPin(GPIO_Typdef_t* GPIOx, uint16_t GPIO_PIN);
 void GPIO_TogglePin(GPIO_Typdef_t* GPIOx, uint16_t GPIO_PIN);
+
 void GPIO_Init(GPIO_Typdef_t* GPIOx, GPIO_PinConfig_t* gpio);
 void GPIO_DeInit(GPIO_Typdef_t* GPIOx);
 void GPIO_CLK_Ctrl(GPIO_Typdef_t* GPIOx, uint8_t control);
+
+void GPIO_IRQConfig(uint8_t IRQNumber, uint8_t EnOrDis);
+void GPIO_IRQ_Set_Priority(uint8_t IRQ, uint8_t priority);
+void GPIO_IRQHandling(uint8_t pin_number);
 #endif /* INC_GPIO_H_ */
 
