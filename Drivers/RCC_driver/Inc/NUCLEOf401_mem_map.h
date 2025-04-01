@@ -9,6 +9,7 @@
 #define NUCLEOF401_MEM_MAP_H_
 
 #include <stdint.h>
+#include <stddef.h>
 
 #define __vo volatile
 ////////////////////////////// CPU //////////////////////////////
@@ -134,6 +135,8 @@ typedef struct{
 									(x == GPIOC) ? 2 :\
 											(x == GPIOD) ? 3 : -1)
 
+// IRQ numbers
+// EXTI IRQs
 #define IRQ_NUM_EXTI0 			6
 #define IRQ_NUM_EXTI1 			7
 #define IRQ_NUM_EXTI2 			8
@@ -141,6 +144,13 @@ typedef struct{
 #define IRQ_NUM_EXTI4 			10
 #define IRQ_NUM_EXTI9_5 		23
 #define IRQ_NUM_EXTI15_10		40
+
+// SPI IRQs
+#define IRQ_NUM_SPI1 			35
+#define IRQ_NUM_SPI2			36
+#define IRQ_NUM_SPI3			51
+#define IRQ_NUM_SPI4			84
+
 ////////////////////////////// SPI //////////////////////////////
 
 #define  SPI1_BASE_ADDRESS 0x40013000

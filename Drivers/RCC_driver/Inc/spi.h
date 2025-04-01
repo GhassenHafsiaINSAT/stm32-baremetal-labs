@@ -23,6 +23,12 @@ typedef struct {
 typedef struct{
 	SPI_Typedef_t* SPIx;
 	SPI_config_t spi_config;
+	uint8_t* pTX_buffer;
+	uint8_t* pRX_buffer;
+	uint32_t TX_len;
+	uint32_t RX_len;
+	uint8_t TX_state;
+	uint8_t RX_state;
 } SPI_Handle_t;
 
 /*
@@ -77,6 +83,12 @@ typedef struct{
 #define SPI_SSM_DIS		0
 #define SPI_SSM_EN		1
 
+/*
+ * SPI states
+ */
+#define SPI_READY 		0
+#define SPI_BUSY_RX 	1
+#define SPI_BUSY_TX 	2
 
 void SPI_PeriClockControl(SPI_Typedef_t* SPIx, uint8_t EnOrDis);
 void SPI_Init(SPI_Handle_t* Spi_handler);
@@ -84,6 +96,9 @@ void SPI_DeInit(SPI_Typedef_t SPIx);
 
 void SPI_Send(SPI_Typedef_t* SPIx, uint8_t* pTxBuffer, uint32_t len);
 void SPI_Receive(SPI_Typedef_t* SPIx, uint8_t* pRxBuffer, uint32_t len);
+
+uint8_t SPI_Send_IT(SPI_Handle_t* SPI_handler, uint8_t* pTxBuffer, uint32_t len);
+uint8_t SPI_Receive_IT(SPI_Handle_t* SPI_handler, uint8_t* pRxBuffer, uint32_t len);
 
 void SPI_IRQInterruptConfig(uint8_t IRQ_Number, uint8_t EnOrDis);
 void SPI_IRQPriorityConfig(uint8_t IRQ_Number, uint32_t IRQPriority);
