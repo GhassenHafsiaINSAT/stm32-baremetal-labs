@@ -144,9 +144,10 @@ void SPI_IRQInterruptConfig(uint8_t IRQ_Number, uint8_t EnOrDis){
 	}
 }
 void SPI_IRQPriorityConfig(uint8_t IRQ_Number, uint32_t IRQPriority){
-	uint8_t iprx = IRQ_number / 4;
-	uint8_t iprx_section = IRQ_number % 4;
-	*(NVIC_IPR + (iprx*4)) |= (IRQ_priority << ((iprx_section * 8) + 4));
+	uint8_t iprx, iprx_section;
+	iprx = IRQ_Number / 4;
+	iprx_section = IRQ_Number % 4;
+	*(NVIC_IPR + (iprx*4)) |= (IRQPriority << ((iprx_section * 8) + 4));
 }
 void SPI_IRQHandling(SPI_Handle_t* Spi_handler){
 
@@ -156,19 +157,19 @@ void SPI_IRQHandling(SPI_Handle_t* Spi_handler){
 	temp1 = Spi_handler->SPIx->SPI_SR & (1 << SPI_SR_TXE);
 	temp2 = Spi_handler->SPIx->SPI_CR2 & (1 << SPI_CR2_TXEIE);
 	if(temp1 && temp2){
-		SPI_TXE_handle();
+		SPI_TXE_handle(Spi_handler);
 	}
 
 	temp1 = Spi_handler->SPIx->SPI_SR & (1 << SPI_SR_RXNE);
 	temp2 = Spi_handler->SPIx->SPI_CR2 & (1 << SPI_CR2_RXNEIE);
 	if(temp1 && temp2){
-		SPI_RXNE_handle();
+		SPI_RXNE_handle(Spi_handler);
 	}
 
 	temp1 = Spi_handler->SPIx->SPI_SR & (1 << SPI_SR_OVR);
 	temp2 = Spi_handler->SPIx->SPI_CR2 & (1 << SPI_CR2_ERRIE);
 	if(temp1 && temp2){
-		SPI_OVR_handle();
+		SPI_OVR_handle(Spi_handler);
 	}
 
 
