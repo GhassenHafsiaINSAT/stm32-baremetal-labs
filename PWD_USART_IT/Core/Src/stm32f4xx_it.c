@@ -41,7 +41,9 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-
+char Receive_buffer[10];
+char password[] = "9876543210";
+uint16_t idx = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -55,7 +57,7 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
-
+extern UART_HandleTypeDef huart2;
 /* USER CODE BEGIN EV */
 
 /* USER CODE END EV */
@@ -197,6 +199,38 @@ void SysTick_Handler(void)
 /* For the available peripheral interrupt handler names,                      */
 /* please refer to the startup file (startup_stm32f4xx.s).                    */
 /******************************************************************************/
+
+/**
+  * @brief This function handles USART2 global interrupt.
+  */
+void USART2_IRQHandler(void)
+{
+  /* USER CODE BEGIN USART2_IRQn 0 */
+
+  /* USER CODE END USART2_IRQn 0 */
+  // HAL_UART_IRQHandler(&huart2);
+  /* USER CODE BEGIN USART2_IRQn 1 */
+  if (huart2.Instance->SR & USART_SR_RXNE){
+  		char c = huart2.Instance->DR;
+  		Receive_buffer[idx++] = c;
+  		if (idx == 10){
+  			idx = 0;
+  			if (strncmp(Receive_buffer, password, 10) == 0){
+  				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+  				for (volatile int i=0; i<0xFFFFF; i++);
+  			}
+  			else {
+  				while (1){
+  					HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+  					HAL_Delay(500);
+  				}
+  			}
+  		}
+
+  	}
+
+  /* USER CODE END USART2_IRQn 1 */
+}
 
 /* USER CODE BEGIN 1 */
 
